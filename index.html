@@ -15,29 +15,55 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 </head>
+<style>
+    .nav_menu {
+        width: 100%;
+        padding-top: 10px;
+        background-color: #f7f7f9;
+        border: 1px solid #e1e1e8;
+        margin-bottom: 15px;
+    }
+    .nav_menu a {
+        
+    }
+</style>
 <body>
-<div id="app" class="container">
-    <h2>{{ title }}</h2>
+<div id="app">
 
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbar-main">
+    <div class="nav_menu">
+        <div class="container">
+            <div class="row">
+                <div class="center-block" style="width: 190px">
 
-                <ul class="nav navbar-nav">
-                    <li v-for="ver in version">
-                        <a v-on:click="get_tasks(ver.id)" href="#">{{ ver.title }}</a>
-                    </li>
-                </ul>
+                    <ul class="list-inline">
+                        <li v-for="ver in version">
+                            <a v-on:click="get_tasks(ver.id)" href="#">{{ ver.title }}</a>
+                        </li>
+                    </ul>
 
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2" v-for="task in raw_tasks">
+                <div class="card">
+                    <p class="bg-info">
+                        <span>{{ task.type }}</span>
+                        <span>{{ task.number }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 <script>
-    new Vue({
+    var app = new Vue({
         el: '#app',
         data: {
             version: [
@@ -45,11 +71,19 @@
                 {id: 2, title: 'deploy 2'},
                 {id: 3, title: 'deploy 3'}
             ],
+            activ_version: '',
             title: 'Title',
+            raw_tasks: [],
             tasks: []
         },
         methods: {
             get_tasks: function (deploy_id) {
+
+                this.activ_version = deploy_id;
+                var _this = this;
+
+                console.log(this.activ_version);
+
                 $.ajax({
                     type: 'POST',
                     url: 'give_back_data.php',
@@ -58,8 +92,14 @@
                     success: function(response)
                     {
                         console.log(response);
+                        _this.raw_tasks = response.tasks;
+                        console.log(_this.raw_tasks);
                     }
                 });
+            },
+            sort_tasks: function ()
+            {
+
             }
         }
     });
