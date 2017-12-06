@@ -25,7 +25,7 @@
 
                 <ul class="nav navbar-nav">
                     <li v-for="ver in version">
-                        <a v-on:click="get_data(ver.id)" href="#">{{ ver.title }}</a>
+                        <a v-on:click="get_tasks(ver.id)" href="#">{{ ver.title }}</a>
                     </li>
                 </ul>
 
@@ -49,9 +49,17 @@
             tasks: []
         },
         methods: {
-            get_data: function (item) {
-                console.log(item);
-
+            get_tasks: function (deploy_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'give_back_data.php',
+                    data: {deploy_id: deploy_id},
+                    dataType: 'json',
+                    success: function(response)
+                    {
+                        console.log(response);
+                    }
+                });
             }
         }
     });
