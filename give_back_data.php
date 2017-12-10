@@ -21,7 +21,7 @@ if ($deploy_id == 1)
             'type' => 'task',
             'priority' => 'low',
             'product_version' => 'deploy 1',
-            'status' => 'refinement'
+            'status' => 'Уточнение'
         ),
         array(
             'number' => 'ATGSM-6886',
@@ -31,7 +31,7 @@ if ($deploy_id == 1)
             'type' => 'error',
             'priority' => 'medium',
             'product_version' => 'deploy 1',
-            'status' => 'open'
+            'status' => 'Открыт'
         ),
         array(
             'number' => 'ATGSM-7192',
@@ -41,8 +41,10 @@ if ($deploy_id == 1)
             'type' => 'error',
             'priority' => 'high',
             'product_version' => 'deploy 1',
-            'status' => 'in_work'
+            'status' => 'В работе'
         ),
+
+
 
         array(
             'number' => 'ATGSM-7355',
@@ -52,7 +54,7 @@ if ($deploy_id == 1)
             'type' => 'task',
             'priority' => 'low',
             'product_version' => 'deploy 1',
-            'status' => 'refinement'
+            'status' => 'Выложить на тест'
         ),
         array(
             'number' => 'ATGSM-6886',
@@ -62,7 +64,7 @@ if ($deploy_id == 1)
             'type' => 'error',
             'priority' => 'medium',
             'product_version' => 'deploy 1',
-            'status' => 'open'
+            'status' => 'Тестируется'
         ),
         array(
             'number' => 'ATGSM-7192',
@@ -72,7 +74,7 @@ if ($deploy_id == 1)
             'type' => 'error',
             'priority' => 'high',
             'product_version' => 'deploy 1',
-            'status' => 'in_work'
+            'status' => 'Готовые'
         )
     );
 }

@@ -17,56 +17,149 @@
 </head>
 <style>
     .nav_menu {
-        width: 100%;
-        padding-top: 10px;
         background-color: #f7f7f9;
+        padding-top: 10px;
         border: 1px solid #e1e1e8;
-        margin-bottom: 15px;
     }
-    .nav_menu a {
-        
+    .status p {
+        margin-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 5px solid #e1e1e8;
     }
+    .summary_task {
+        display: block !important;
+        float: right;
+        width: 20%;
+    }
+    .summary_task_hide {
+        display: none;
+    }
+    .main_tasks_summary {
+        width: 80% !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        overflow-y: auto;
+    }
+    .main_tasks_not_summary {
+        width: 90%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .summary_task .row {
+         margin-right: 0;
+         margin-left: 0;
+    }
+    .summary_task h4 {
+        padding-left: 15px;
+    }
+    .task_header {
+        padding-top: 10px;
+    }
+    .task_body {
+        overflow-y: auto;
+        margin-top: 15px;
+    }
+    .summary_task .rubric {
+        color: #8C8C8C;
+    }
+    .summary_task .btn-default {
+        margin-left: 15px;
+        margin-bottom: 10px;
+    }
+
 </style>
 <body>
 <div id="app">
-
     <div class="nav_menu">
         <div class="container">
-            <div class="row">
-                <div class="center-block" style="width: 190px">
-
-                    <ul class="list-inline">
-                        <li v-for="ver in version">
-                            <a v-on:click="get_tasks(ver.id)" href="#">{{ ver.title }}</a>
-                        </li>
-                    </ul>
-
-                </div>
+            <div class="center-block" style="width: 190px">
+                <ul class="list-inline">
+                    <li v-for="value in version">
+                        <a v-on:click="get_tasks(value.id)" href="#">{{ value.title }}</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2" v-for="task in raw_tasks">
-                <div class="card">
-                    <p class="bg-info">
-                        <span>{{ task.type }}</span>
-                        <span>{{ task.number }}</span>
+    <div class="summary_task_hide" v-bind:class="{'summary_task': layout == 'summary'}">
+        <div class="task_header">
+            <div class="row">
+                <button type="button" class="btn btn-default" v-on:click="edit_task(sammary_task.id)">Редактировать</button>
+                <p class="col-xs-12">ИМ СпортМастер (ESM) / {{ sammary_task.number }}</p>
+                <p class="col-xs-12"> {{ sammary_task.title }}</p>
+            </div>
+        </div>
+        <div class="task_body">
+           <div class="row"> <h4>Подробности запроса</h4></div>
+            <div class="row">
+                <p class="col-xs-4 rubric">Статус</p>
+                <p class="col-xs-8">{{ sammary_task.status }}</p>
+            </div>
+            <div class="row">
+                <p class="col-xs-4 rubric">Исправить в продуктах</p>
+                <p class="col-xs-8">{{ sammary_task.product_version }}</p>
+            </div>
+            <div class="row"><h4>Люди</h4></div>
+            <div class="row">
+                <p class="col-xs-4 rubric">Автор</p>
+                <p class="col-xs-8">Автор</p>
+                <p class="col-xs-4 rubric">Исполнитель</p>
+                <p class="col-xs-8">{{ sammary_task.performer }}</p>
+            </div>
+            <div class="row"><h4>Описание</h4></div>
+            <div class="row">
+                <p class="col-xs-12">{{ sammary_task.description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main_tasks_not_summary" v-bind:class="{'main_tasks_summary': layout == 'summary'}">
+        <div class="status">
+            <div class="row">
+                <div class="col-md-2" v-for="value in status">
+                    <p>
+                        {{ value }}
                     </p>
                 </div>
             </div>
         </div>
-    </div>
 
+        <div v-if="tasks">
+            <div class="row" v-for="(status, performer) in tasks">
+                <div class="col-md-12"> {{ performer }}</div>
+                <div class="clearfix"></div>
+                <div class="col-md-2"  v-for="tasks_in_status in status">
+
+                    <div class="panel panel-default" v-if="tasks_in_status !== null">
+                        <div class="panel-body"  v-for="value in tasks_in_status">
+                            <span>{{ value.type }}</span><br>
+                            <span><a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a></span><br>
+                            <span>{{ value.status }}</span>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" style="height: 100%" v-else>
+                        <div class="panel-body"  style="height: 100%">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
-        data: {
-            version: [
+        data:
+        {
+            version:
+            [
                 {id: 1, title: 'deploy 1'},
                 {id: 2, title: 'deploy 2'},
                 {id: 3, title: 'deploy 3'}
@@ -74,15 +167,59 @@
             activ_version: '',
             title: 'Title',
             raw_tasks: [],
-            tasks: []
+            status: ['Уточнение', 'Открыт', 'В работе', 'Выложить на тест', 'Тестируется', 'Готовые'],
+            editable_task: {},
+            sammary_task: {},
+            layout: 'main',
         },
-        methods: {
-            get_tasks: function (deploy_id) {
+        computed:
+        {
+            tasks: function ()
+            {
+                if (!this.isEmptyObject(this.raw_tasks))
+                {
+                    var sort_tasks = {},
+                    _status = this.status;
+                    
+                    this.raw_tasks.forEach(function(item) 
+                    {
+                        if (!(item.performer in sort_tasks))
+                        {
+                            sort_tasks[item.performer] = {};
+                            _status.forEach(function (status)
+                            {
+                                sort_tasks[item.performer][status] = null;
+                            });
+                        }
+                    });
+                    
+                    for (key in sort_tasks)
+                    {
+                        this.raw_tasks.forEach(function(item, i)
+                        {
+                            if (item.performer == key)
+                            {
+                                item['id']  = i;
+                                sort_tasks[key][item.status] == null ? sort_tasks[key][item.status] = [item] : sort_tasks[key][item.status].push(item);
+                            }
+                        });
+                    };
+
+                    return sort_tasks;
+                }
+                else
+                {
+                    return false
+                }
+            }
+        },
+        methods:
+        {
+            get_tasks: function (deploy_id)
+            {
 
                 this.activ_version = deploy_id;
                 var _this = this;
-
-                console.log(this.activ_version);
 
                 $.ajax({
                     type: 'POST',
@@ -91,16 +228,31 @@
                     dataType: 'json',
                     success: function(response)
                     {
-                        console.log(response);
                         _this.raw_tasks = response.tasks;
-                        console.log(_this.raw_tasks);
                     }
                 });
             },
-            sort_tasks: function ()
+            show_summary: function (id)
             {
-
+                this.sammary_task = this.raw_tasks[id];
+                this.sammary_task['id'] = id;
+                this.layout = 'summary';
+            },
+            edit_task: function ()
+            {
+                this.layout = 'main';
+                this.editable_task = this.raw_tasks[id];
+                this.editable_task['id'] = id;
+            },
+            isEmptyObject: function (obj)
+            {
+                for (var key in obj)
+                {
+                    return false;
+                }
+                return true;
             }
+
         }
     });
 </script>
