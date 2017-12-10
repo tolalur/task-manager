@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <!-- Latest compiled and minified CSS -->
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
@@ -21,10 +20,21 @@
         padding-top: 10px;
         border: 1px solid #e1e1e8;
     }
+    .status {
+        margin-bottom: 10px;
+    }
+
     .status p {
         margin-top: 10px;
         padding-bottom: 10px;
-        border-bottom: 5px solid #e1e1e8;
+        border-bottom: 10px solid #e1e1e8;
+    }
+    .performer_title {
+        margin-bottom: 10px;
+    }
+    .performer_title hr {
+        margin: 0;
+        padding-top: 7px;
     }
     .summary_task {
         display: block !important;
@@ -67,6 +77,14 @@
     .summary_task .btn-default {
         margin-left: 15px;
         margin-bottom: 10px;
+    }
+    .panel {
+        min-height: 100px;
+    }
+    #modal_edit label {
+        font-weight: 600;
+        font-size: 12px;
+        color: #8C8C8C;
     }
 
 </style>
@@ -129,20 +147,21 @@
 
         <div v-if="tasks">
             <div class="row" v-for="(status, performer) in tasks">
-                <div class="col-md-12"> {{ performer }}</div>
+                <div class="col-md-12 performer_title">{{ performer }}<hr></div>
                 <div class="clearfix"></div>
                 <div class="col-md-2"  v-for="tasks_in_status in status">
 
                     <div class="panel panel-default" v-if="tasks_in_status !== null">
                         <div class="panel-body"  v-for="value in tasks_in_status">
-                            <span>{{ value.type }}</span><br>
-                            <span><a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a></span><br>
-                            <span>{{ value.status }}</span>
+                            <p>
+                                <span>{{ value.type }}</span>
+                                <a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a>
+                            </p>
+                            <span>{{ value.title }}</span><br>
                         </div>
                     </div>
-                    <div class="panel panel-default" style="height: 100%" v-else>
-                        <div class="panel-body"  style="height: 100%">
-
+                    <div class="panel panel-default" v-else>
+                        <div class="panel-body"  style="height: 100px; background: #e1e1e8">
                         </div>
                     </div>
 
@@ -150,10 +169,72 @@
             </div>
         </div>
     </div>
+
+    <div id="modal_edit" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Редактирование задачи</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Проект</label>
+                            <div class="col-xs-6">
+                                <input type="text" class="form-control" value="ИМ СпортМастер (ESM)" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Тип задачи</label>
+                            <div class="col-xs-6">
+                                <select class="form-control"  v-model="editable_task.type">
+                                    <option  v-for="value in task_type">{{ value }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Название</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" v-model="editable_task.title">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Описание</label>
+                            <div class="col-xs-10">
+                                <!--<input type="text" class="form-control" >-->
+                                <textarea v-model="editable_task.description" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">Исполнитель</label>
+                            <div class="col-xs-6">
+                                <select class="form-control"  v-model="editable_task.performer">
+                                    <option  v-for="value in performers">{{ value }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 <script>
+
     var app = new Vue({
         el: '#app',
         data:
@@ -171,6 +252,9 @@
             editable_task: {},
             sammary_task: {},
             layout: 'main',
+            task_type: ['Задача', 'Ошибка'],
+            performers: ['Бородин Алексей', 'Бутаков Валентин', 'Власов Артем']
+
         },
         computed:
         {
@@ -238,11 +322,14 @@
                 this.sammary_task['id'] = id;
                 this.layout = 'summary';
             },
-            edit_task: function ()
+            edit_task: function (id)
             {
                 this.layout = 'main';
+
                 this.editable_task = this.raw_tasks[id];
                 this.editable_task['id'] = id;
+
+                $("#modal_edit").modal('show');
             },
             isEmptyObject: function (obj)
             {

@@ -18,7 +18,7 @@ if ($deploy_id == 1)
             'title' => 'Использование переменных в настройках СЕО',
             'description' => 'Описание задачи ATGSM-7355',
             'performer' => 'Бородин Алексей',
-            'type' => 'task',
+            'type' => 'Задача',
             'priority' => 'low',
             'product_version' => 'deploy 1',
             'status' => 'Уточнение'
@@ -28,7 +28,7 @@ if ($deploy_id == 1)
             'title' => 'Починить поиск по бренду',
             'description' => 'Описание задачи ATGSM-6886',
             'performer' => 'Бутаков Валентин',
-            'type' => 'error',
+            'type' => 'Ошибка',
             'priority' => 'medium',
             'product_version' => 'deploy 1',
             'status' => 'Открыт'
@@ -38,7 +38,7 @@ if ($deploy_id == 1)
             'title' => 'Создание формы регистрации',
             'description' => 'Описание задачи ATGSM-7192',
             'performer' => 'Власов Артем',
-            'type' => 'error',
+            'type' => 'Ошибка',
             'priority' => 'high',
             'product_version' => 'deploy 1',
             'status' => 'В работе'
@@ -51,7 +51,7 @@ if ($deploy_id == 1)
             'title' => 'Использование переменных в настройках СЕО',
             'description' => 'Описание задачи ATGSM-7355',
             'performer' => 'Бородин Алексей',
-            'type' => 'task',
+            'type' => 'Задача',
             'priority' => 'low',
             'product_version' => 'deploy 1',
             'status' => 'Выложить на тест'
@@ -61,7 +61,7 @@ if ($deploy_id == 1)
             'title' => 'Починить поиск по бренду',
             'description' => 'Описание задачи ATGSM-6886',
             'performer' => 'Бутаков Валентин',
-            'type' => 'error',
+            'type' => 'Ошибка',
             'priority' => 'medium',
             'product_version' => 'deploy 1',
             'status' => 'Тестируется'
@@ -71,7 +71,7 @@ if ($deploy_id == 1)
             'title' => 'Создание формы регистрации',
             'description' => 'Описание задачи ATGSM-7192',
             'performer' => 'Власов Артем',
-            'type' => 'error',
+            'type' => 'Ошибка',
             'priority' => 'high',
             'product_version' => 'deploy 1',
             'status' => 'Готовые'
