@@ -19,7 +19,7 @@ if ($deploy_id == 1)
             'description' => 'Описание задачи ATGSM-7355',
             'performer' => 'Бородин Алексей',
             'type' => 'Задача',
-            'priority' => 'low',
+            'priority' => 'Низкий',
             'product_version' => 'deploy 1',
             'status' => 'Уточнение'
         ),
@@ -29,7 +29,7 @@ if ($deploy_id == 1)
             'description' => 'Описание задачи ATGSM-6886',
             'performer' => 'Бутаков Валентин',
             'type' => 'Ошибка',
-            'priority' => 'medium',
+            'priority' => 'Средний',
             'product_version' => 'deploy 1',
             'status' => 'Открыт'
         ),
@@ -39,7 +39,7 @@ if ($deploy_id == 1)
             'description' => 'Описание задачи ATGSM-7192',
             'performer' => 'Власов Артем',
             'type' => 'Ошибка',
-            'priority' => 'high',
+            'priority' => 'Критический',
             'product_version' => 'deploy 1',
             'status' => 'В работе'
         ),
@@ -52,7 +52,7 @@ if ($deploy_id == 1)
             'description' => 'Описание задачи ATGSM-7355',
             'performer' => 'Бородин Алексей',
             'type' => 'Задача',
-            'priority' => 'low',
+            'priority' => 'Низкий',
             'product_version' => 'deploy 1',
             'status' => 'Выложить на тест'
         ),
@@ -62,7 +62,7 @@ if ($deploy_id == 1)
             'description' => 'Описание задачи ATGSM-6886',
             'performer' => 'Бутаков Валентин',
             'type' => 'Ошибка',
-            'priority' => 'medium',
+            'priority' => 'Средний',
             'product_version' => 'deploy 1',
             'status' => 'Тестируется'
         ),
@@ -72,7 +72,7 @@ if ($deploy_id == 1)
             'description' => 'Описание задачи ATGSM-7192',
             'performer' => 'Власов Артем',
             'type' => 'Ошибка',
-            'priority' => 'high',
+            'priority' => 'Критический',
             'product_version' => 'deploy 1',
             'status' => 'Готовые'
         )
