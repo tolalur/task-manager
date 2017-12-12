@@ -154,45 +154,45 @@
             <div class="row" v-for="(status, performer) in tasks">
                 <div class="col-md-12 performer_title">{{ performer }}<hr></div>
                 <div class="clearfix"></div>
-                <div class="col-md-2"  v-for="tasks_in_status in status">
-
-                <div v-if="tasks_in_status !== null">
-                  <div class="panel panel-default" v-for="value in tasks_in_status">
-                      <div class="panel-body">
-                          <p>
-                              <span>
-                                  <i class="glyphicon glyphicon-plus-sign" aria-hidden="true"
-                                     style="color: green"
-                                     v-if="value.type == 'Задача'">
-                                  </i>
-                                  <i class="glyphicon glyphicon-alert" aria-hidden="true"
-                                     style="color: red"
-                                     v-if="value.type == 'Ошибка'">
-                                  </i>
-                              </span>
-                              <a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a>
-                          </p>
-                          <span>
-                              <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
-                                 style="color: blue"
-                                 v-if="value.priority == 'Низкий'"></i>
-                              <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
-                                 style="color: green"
-                                 v-if="value.priority == 'Средний'"></i>
-                              <i class="glyphicon glyphicon-fire" aria-hidden="true"
-                                 style="color: red"
-                                 v-if="value.priority == 'Критический'"></i>
-                              {{ value.title }}
-                          </span>
-                      </div>
-                  </div>
-                </div>
-                    <div class="panel panel-default" v-else>
-                        <div class="panel-body"  style="height: 100px; background: #e1e1e8">
+                <draggable class="dragArea" :list="tasks.status" v-model="tasks.status">
+                    <div class="col-md-2"  v-for="tasks_in_status in status">
+                      <div v-if="tasks_in_status !== null">
+                        <div class="panel panel-default" v-for="value in tasks_in_status">
+                            <div class="panel-body">
+                                <p>
+                                    <span>
+                                        <i class="glyphicon glyphicon-plus-sign" aria-hidden="true"
+                                           style="color: green"
+                                           v-if="value.type == 'Задача'">
+                                        </i>
+                                        <i class="glyphicon glyphicon-alert" aria-hidden="true"
+                                           style="color: red"
+                                           v-if="value.type == 'Ошибка'">
+                                        </i>
+                                    </span>
+                                    <a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a>
+                                </p>
+                                <span>
+                                    <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
+                                       style="color: blue"
+                                       v-if="value.priority == 'Низкий'"></i>
+                                    <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
+                                       style="color: green"
+                                       v-if="value.priority == 'Средний'"></i>
+                                    <i class="glyphicon glyphicon-fire" aria-hidden="true"
+                                       style="color: red"
+                                       v-if="value.priority == 'Критический'"></i>
+                                    {{ value.title }}
+                                </span>
+                            </div>
                         </div>
+                      </div>
+                      <div class="panel panel-default" v-else>
+                          <div class="panel-body"  style="height: 100px; background: #e1e1e8">
+                          </div>
+                      </div>
                     </div>
-
-                </div>
+                </draggable>
             </div>
         </div>
     </div>
@@ -363,6 +363,9 @@
 </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
+<script type="text/javascript" src="/assets/libs/Sortable/Sortable.js"></script>
+<script type="text/javascript" src="/assets/libs/lodash/lodash.js"></script>
+<script type="text/javascript" src="/assets/src/vuedraggable.js"></script>
 <script>
 
     var app = new Vue({
@@ -377,10 +380,12 @@
             ],
             activ_version: '',
             raw_tasks: [],
+            tasks: [],
             status: ['Уточнение', 'Открыт', 'В работе', 'Выложить на тест', 'Тестируется', 'Готовые'],
             editable_task: {},
             sammary_task: {},
             new_task: {},
+            temp: {},
             layout: 'main',
             task_type: ['Задача', 'Ошибка'],
             priority: ['Низкий', 'Средний', 'Критический'],
@@ -389,8 +394,55 @@
         },
         computed:
         {
-            tasks: function ()
-            {
+
+        //       get: function ()
+        //       {
+        //           if (!this.isEmptyObject(this.raw_tasks))
+        //           {
+        //               var sort_tasks = {},
+        //               _status = this.status;
+        //
+        //               this.raw_tasks.forEach(function(item)
+        //               {
+        //                   if (!(item.performer in sort_tasks))
+        //                   {
+        //                       sort_tasks[item.performer] = {};
+        //                       _status.forEach(function (status)
+        //                       {
+        //                           sort_tasks[item.performer][status] = null;
+        //                       });
+        //                   }
+        //               });
+        //
+        //               for (key in sort_tasks)
+        //               {
+        //                   this.raw_tasks.forEach(function(item, i)
+        //                   {
+        //                       if (item.performer == key)
+        //                       {
+        //                           item['id']  = i;
+        //                           sort_tasks[key][item.status] == null ? sort_tasks[key][item.status] = [item] : sort_tasks[key][item.status].push(item);
+        //                       }
+        //                   });
+        //               };
+        //
+        //               return sort_tasks;
+        //           }
+        //           else
+        //           {
+        //               return false
+        //           }
+        //       },
+        //       set: function (newValue)
+        //       {
+        //         console.console.log(newValue);
+        //       }
+        //     }
+        },
+        watch:
+        {
+          raw_tasks: function ()
+          {
                 if (!this.isEmptyObject(this.raw_tasks))
                 {
                     var sort_tasks = {},
@@ -419,17 +471,16 @@
                             }
                         });
                     };
-
-                    return sort_tasks;
-                }
-                else
-                {
-                    return false
+                    this.tasks = sort_tasks;
                 }
             }
         },
         methods:
         {
+          move: function(evt, originalEvent)
+          {
+            console.log(evt, originalEvent);
+          },
             get_tasks: function (deploy_id)
             {
 
@@ -469,6 +520,12 @@
 
                 $("#modal_edit").modal('show');
             },
+            add: function(){
+      				this.list.push({name:'Juan'});
+      			},
+      			replace: function(){
+      				this.list=[{name:'Edgard'}]
+      			},
             isEmptyObject: function (obj)
             {
                 for (var key in obj)
