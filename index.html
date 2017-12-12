@@ -156,35 +156,37 @@
                 <div class="clearfix"></div>
                 <div class="col-md-2"  v-for="tasks_in_status in status">
 
-                    <div class="panel panel-default" v-if="tasks_in_status !== null">
-                        <div class="panel-body"  v-for="value in tasks_in_status">
-                            <p>
-                                <span>
-                                    <i class="glyphicon glyphicon-plus-sign" aria-hidden="true"
-                                       style="color: green"
-                                       v-if="value.type == 'Задача'">
-                                    </i>
-                                    <i class="glyphicon glyphicon-alert" aria-hidden="true"
-                                       style="color: red"
-                                       v-if="value.type == 'Ошибка'">
-                                    </i>
-                                </span>
-                                <a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a>
-                            </p>
-                            <span>
-                                <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
-                                   style="color: blue"
-                                   v-if="value.priority == 'Низкий'"></i>
-                                <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
-                                   style="color: green"
-                                   v-if="value.priority == 'Средний'"></i>
-                                <i class="glyphicon glyphicon-fire" aria-hidden="true"
-                                   style="color: red"
-                                   v-if="value.priority == 'Критический'"></i>
-                                {{ value.title }}
-                            </span><br>
-                        </div>
-                    </div>
+                <div v-if="tasks_in_status !== null">
+                  <div class="panel panel-default" v-for="value in tasks_in_status">
+                      <div class="panel-body">
+                          <p>
+                              <span>
+                                  <i class="glyphicon glyphicon-plus-sign" aria-hidden="true"
+                                     style="color: green"
+                                     v-if="value.type == 'Задача'">
+                                  </i>
+                                  <i class="glyphicon glyphicon-alert" aria-hidden="true"
+                                     style="color: red"
+                                     v-if="value.type == 'Ошибка'">
+                                  </i>
+                              </span>
+                              <a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a>
+                          </p>
+                          <span>
+                              <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
+                                 style="color: blue"
+                                 v-if="value.priority == 'Низкий'"></i>
+                              <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
+                                 style="color: green"
+                                 v-if="value.priority == 'Средний'"></i>
+                              <i class="glyphicon glyphicon-fire" aria-hidden="true"
+                                 style="color: red"
+                                 v-if="value.priority == 'Критический'"></i>
+                              {{ value.title }}
+                          </span>
+                      </div>
+                  </div>
+                </div>
                     <div class="panel panel-default" v-else>
                         <div class="panel-body"  style="height: 100px; background: #e1e1e8">
                         </div>
@@ -351,7 +353,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" v-on:click="raw_tasks.push(new_task)">Сохранить изменения</button>
+                    <button type="button" class="btn btn-primary" v-on:click="add_task()">Сохранить изменения</button>
                 </div>
 
             </div>
@@ -393,8 +395,8 @@
                 {
                     var sort_tasks = {},
                     _status = this.status;
-                    
-                    this.raw_tasks.forEach(function(item) 
+
+                    this.raw_tasks.forEach(function(item)
                     {
                         if (!(item.performer in sort_tasks))
                         {
@@ -405,7 +407,7 @@
                             });
                         }
                     });
-                    
+
                     for (key in sort_tasks)
                     {
                         this.raw_tasks.forEach(function(item, i)
@@ -453,7 +455,10 @@
             },
             add_task: function ()
             {
-                alert (123);
+              this.new_task.number = 'ATGSM-' + Math.floor(Math.random() * (8000 - 1000)) + 1000;
+              this.raw_tasks.push(this.new_task);
+              $("#modal_add").modal('hide');
+              this.new_task = {};
             },
             edit_task: function (id)
             {
