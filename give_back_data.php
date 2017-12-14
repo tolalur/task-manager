@@ -43,9 +43,6 @@ if ($deploy_id == 1)
             'product_version' => 'deploy 1',
             'status' => 'В работе'
         ),
-
-
-
         array(
             'number' => 'ATGSM-7355',
             'title' => 'Использование переменных в настройках СЕО',
@@ -81,12 +78,12 @@ if ($deploy_id == 1)
 
 if ($deploy_id == 2)
 {
-    $response['status'] = true;
+    $response['status'] = false;
 }
 
 if ($deploy_id == 3)
 {
-    $response['status'] = true;
+    $response['status'] = false;
 }
 
 

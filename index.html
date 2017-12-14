@@ -22,6 +22,7 @@
         padding-top: 10px;
         border: 1px solid #e1e1e8;
     }
+
     .status {
         margin-bottom: 10px;
     }
@@ -31,27 +32,33 @@
         padding-bottom: 10px;
         border-bottom: 10px solid #e1e1e8;
     }
+
     .performer_title {
         margin-bottom: 10px;
     }
+
     .performer_title hr {
         margin: 0;
         padding-top: 7px;
     }
+
     .summary_task {
         display: block !important;
         float: right;
         width: 20%;
     }
+
     .summary_task_hide {
         display: none;
     }
+
     .main_tasks_summary {
         width: 80% !important;
         margin-right: 0 !important;
         margin-left: 0 !important;
         overflow-y: auto;
     }
+
     .main_tasks_not_summary {
         width: 90%;
         padding-right: 15px;
@@ -59,30 +66,38 @@
         margin-right: auto;
         margin-left: auto;
     }
+
     .summary_task .row {
-         margin-right: 0;
-         margin-left: 0;
+        margin-right: 0;
+        margin-left: 0;
     }
+
     .summary_task h4 {
         padding-left: 15px;
     }
+
     .task_header {
         padding-top: 10px;
     }
+
     .task_body {
         overflow-y: auto;
         margin-top: 15px;
     }
+
     .summary_task .rubric {
         color: #8C8C8C;
     }
+
     .summary_task .btn-default {
         margin-left: 15px;
         margin-bottom: 10px;
     }
+
     .panel {
         min-height: 100px;
     }
+
     #modal_edit label {
         font-weight: 600;
         font-size: 12px;
@@ -99,7 +114,11 @@
                     <li v-for="value in version">
                         <a v-on:click="get_tasks(value.id)" href="#">{{ value.title }}</a>
                     </li>
-                    <li> <button type="button" class="btn btn-default" onclick="$('#modal_add').modal('show');">Добавить задачу</button></li>
+                    <li>
+                        <button type="button" class="btn btn-default" onclick="$('#modal_add').modal('show');">Добавить
+                            задачу
+                        </button>
+                    </li>
                 </ul>
 
             </div>
@@ -109,13 +128,18 @@
     <div class="summary_task_hide" v-bind:class="{'summary_task': layout == 'summary'}">
         <div class="task_header">
             <div class="row">
-                <button type="button" class="btn btn-default" v-on:click="edit_task(sammary_task.id)">Редактировать</button>
+                <button type="button" class="btn btn-default" v-on:click="edit_task(sammary_task.id)">
+                    Редактировать
+                </button>
+                <button type="button" class="btn btn-default" v-on:click="layout = 'layout'">
+                    Закрыть
+                </button>
                 <p class="col-xs-12">ИМ СпортМастер (ESM) / {{ sammary_task.number }}</p>
                 <p class="col-xs-12"> {{ sammary_task.title }}</p>
             </div>
         </div>
         <div class="task_body">
-           <div class="row"> <h4>Подробности запроса</h4></div>
+            <div class="row"><h4>Подробности запроса</h4></div>
             <div class="row">
                 <p class="col-xs-4 rubric">Статус</p>
                 <p class="col-xs-8">{{ sammary_task.status }}</p>
@@ -152,47 +176,50 @@
 
         <div v-if="tasks">
             <div class="row" v-for="(status, performer) in tasks">
-                <div class="col-md-12 performer_title">{{ performer }}<hr></div>
+                <div class="col-md-12 performer_title">{{ performer }}
+                    <hr>
+                </div>
                 <div class="clearfix"></div>
-                <draggable class="dragArea" :list="tasks.status" v-model="tasks.status">
-                    <div class="col-md-2"  v-for="tasks_in_status in status">
-                      <div v-if="tasks_in_status !== null">
-                        <div class="panel panel-default" v-for="value in tasks_in_status">
-                            <div class="panel-body">
-                                <p>
+                <div class="col-md-2" v-for="tasks_in_status in status">
+                    <draggable class="dragArea" :list="tasks_in_status" :options="{group:'tasks'}" @end="onEnd">
+                        <div v-if="!isEmptyObject(tasks_in_status)">
+                            <div class="panel panel-default" v-for="value in tasks_in_status">
+                                <div class="panel-body">
+                                    <p>
+                                        <span>
+                                            <i class="glyphicon glyphicon-plus-sign" aria-hidden="true"
+                                               style="color: green" title="Задача"
+                                               v-if="value.type == 'Задача'">
+                                            </i>
+                                            <i class="glyphicon glyphicon-alert" aria-hidden="true"
+                                               style="color: red" title="Ошибка"
+                                               v-if="value.type == 'Ошибка'">
+                                            </i>
+                                        </span>
+                                        <a href="#" v-on:click="show_summary(value.id)"> {{ value.number }}</a>
+                                    </p>
                                     <span>
-                                        <i class="glyphicon glyphicon-plus-sign" aria-hidden="true"
-                                           style="color: green"
-                                           v-if="value.type == 'Задача'">
-                                        </i>
-                                        <i class="glyphicon glyphicon-alert" aria-hidden="true"
-                                           style="color: red"
-                                           v-if="value.type == 'Ошибка'">
-                                        </i>
+                                        <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
+                                           style="color: blue" title="Низкий приоритет"
+                                           v-if="value.priority == 'Низкий'"></i>
+                                        <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
+                                           style="color: green" title="Средний приоритет"
+                                           v-if="value.priority == 'Средний'"></i>
+                                        <i class="glyphicon glyphicon-fire" aria-hidden="true"
+                                           style="color: red" title="Критический приоритет"
+                                           v-if="value.priority == 'Критический'"></i>
+                                         {{ value.title }}
                                     </span>
-                                    <a href="#" v-on:click="show_summary(value.id)">{{ value.number }}</a>
-                                </p>
-                                <span>
-                                    <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
-                                       style="color: blue"
-                                       v-if="value.priority == 'Низкий'"></i>
-                                    <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
-                                       style="color: green"
-                                       v-if="value.priority == 'Средний'"></i>
-                                    <i class="glyphicon glyphicon-fire" aria-hidden="true"
-                                       style="color: red"
-                                       v-if="value.priority == 'Критический'"></i>
-                                    {{ value.title }}
-                                </span>
+                                </div>
                             </div>
                         </div>
-                      </div>
-                      <div class="panel panel-default" v-else>
-                          <div class="panel-body"  style="height: 100px; background: #e1e1e8">
-                          </div>
-                      </div>
-                    </div>
-                </draggable>
+                        <div class="panel panel-default" v-else>
+                            <div class="panel-body" style="height: 100px; background: #e1e1e8">
+                            </div>
+                        </div>
+                    </draggable>
+                </div>
+
             </div>
         </div>
     </div>
@@ -217,8 +244,8 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Тип задачи</label>
                             <div class="col-xs-6">
-                                <select class="form-control"  v-model="editable_task.type">
-                                    <option  v-for="value in task_type">{{ value }}</option>
+                                <select class="form-control" v-model="editable_task.type">
+                                    <option v-for="value in task_type">{{ value }}</option>
                                 </select>
                             </div>
                         </div>
@@ -232,8 +259,8 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Приоритет</label>
                             <div class="col-xs-10">
-                                <select class="form-control"  v-model="editable_task.priority">
-                                    <option  v-for="value in priority">
+                                <select class="form-control" v-model="editable_task.priority">
+                                    <option v-for="value in priority">
                                         <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
                                            style="color: blue"
                                            v-if="value == 'Низкий'"></i>
@@ -257,8 +284,8 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Исполнитель</label>
                             <div class="col-xs-6">
-                                <select class="form-control"  v-model="editable_task.performer">
-                                    <option  v-for="value in performers">{{ value }}</option>
+                                <select class="form-control" v-model="editable_task.performer">
+                                    <option v-for="value in performers">{{ value }}</option>
                                 </select>
                             </div>
                         </div>
@@ -295,8 +322,8 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Тип задачи</label>
                             <div class="col-xs-6">
-                                <select class="form-control"  v-model="new_task.type">
-                                    <option  v-for="value in task_type">{{ value }}</option>
+                                <select class="form-control" v-model="new_task.type">
+                                    <option v-for="value in task_type">{{ value }}</option>
                                 </select>
                             </div>
                         </div>
@@ -310,8 +337,8 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Приоритет</label>
                             <div class="col-xs-10">
-                                <select class="form-control"  v-model="new_task.priority">
-                                    <option  v-for="value in priority">
+                                <select class="form-control" v-model="new_task.priority">
+                                    <option v-for="value in priority">
                                         <i class="glyphicon glyphicon-chevron-up" aria-hidden="true"
                                            style="color: blue"
                                            v-if="value == 'Низкий'"></i>
@@ -335,16 +362,16 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Исполнитель</label>
                             <div class="col-xs-6">
-                                <select class="form-control"  v-model="new_task.performer">
-                                    <option  v-for="value in performers">{{ value }}</option>
+                                <select class="form-control" v-model="new_task.performer">
+                                    <option v-for="value in performers">{{ value }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Статус</label>
                             <div class="col-xs-6">
-                                <select class="form-control"  v-model="new_task.status">
-                                    <option  v-for="value in status">{{ value }}</option>
+                                <select class="form-control" v-model="new_task.status">
+                                    <option v-for="value in status">{{ value }}</option>
                                 </select>
                             </div>
                         </div>
@@ -364,16 +391,13 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 <script type="text/javascript" src="/assets/libs/Sortable/Sortable.js"></script>
-<script type="text/javascript" src="/assets/libs/lodash/lodash.js"></script>
 <script type="text/javascript" src="/assets/src/vuedraggable.js"></script>
 <script>
 
     var app = new Vue({
         el: '#app',
-        data:
-        {
-            version:
-            [
+        data: {
+            version: [
                 {id: 1, title: 'deploy 1'},
                 {id: 2, title: 'deploy 2'},
                 {id: 3, title: 'deploy 3'}
@@ -386,104 +410,124 @@
             sammary_task: {},
             new_task: {},
             temp: {},
-            layout: 'main',
+            layout: 'layout',
             task_type: ['Задача', 'Ошибка'],
             priority: ['Низкий', 'Средний', 'Критический'],
             performers: ['Бородин Алексей', 'Бутаков Валентин', 'Власов Артем']
 
         },
-        computed:
-        {
-
-        //       get: function ()
-        //       {
-        //           if (!this.isEmptyObject(this.raw_tasks))
-        //           {
-        //               var sort_tasks = {},
-        //               _status = this.status;
-        //
-        //               this.raw_tasks.forEach(function(item)
-        //               {
-        //                   if (!(item.performer in sort_tasks))
-        //                   {
-        //                       sort_tasks[item.performer] = {};
-        //                       _status.forEach(function (status)
-        //                       {
-        //                           sort_tasks[item.performer][status] = null;
-        //                       });
-        //                   }
-        //               });
-        //
-        //               for (key in sort_tasks)
-        //               {
-        //                   this.raw_tasks.forEach(function(item, i)
-        //                   {
-        //                       if (item.performer == key)
-        //                       {
-        //                           item['id']  = i;
-        //                           sort_tasks[key][item.status] == null ? sort_tasks[key][item.status] = [item] : sort_tasks[key][item.status].push(item);
-        //                       }
-        //                   });
-        //               };
-        //
-        //               return sort_tasks;
-        //           }
-        //           else
-        //           {
-        //               return false
-        //           }
-        //       },
-        //       set: function (newValue)
-        //       {
-        //         console.console.log(newValue);
-        //       }
-        //     }
-        },
-        watch:
-        {
-          raw_tasks: function ()
-          {
+//        computed: {
+//            tasks:
+//            {
+//                get: function ()
+//                {
+//                    if (!this.isEmptyObject(this.raw_tasks))
+//                    {
+//                        var sort_tasks = {},
+//                            _status = this.status;
+//
+//                        this.raw_tasks.forEach(function (item)
+//                        {
+//                            if (!(item.performer in sort_tasks))
+//                            {
+//                                sort_tasks[item.performer] = {};
+//                                _status.forEach(function (status)
+//                                {
+//                                    sort_tasks[item.performer][status] = [];
+//                                });
+//                            }
+//                        });
+//
+//                        for (key in sort_tasks)
+//                        {
+//                            this.raw_tasks.forEach(function (item, i)
+//                            {
+//                                if (item.performer == key)
+//                                {
+//                                    item['id'] = i;
+//                                    sort_tasks[key][item.status] == undefined ? sort_tasks[key][item.status] = [item] : sort_tasks[key][item.status].push(item);
+//                                }
+//                            });
+//                        }
+//
+//                        return sort_tasks;
+//                    }
+//                    else
+//                    {
+//                        return false
+//                    }
+//                },
+//                set: function (newValue)
+//                {
+//                    console.console.log(newValue);
+//                }
+//            }
+//        },
+        watch: {
+            raw_tasks: function ()
+            {
                 if (!this.isEmptyObject(this.raw_tasks))
                 {
                     var sort_tasks = {},
-                    _status = this.status;
+                        _status = this.status;
 
-                    this.raw_tasks.forEach(function(item)
+                    this.raw_tasks.forEach(function (item)
                     {
                         if (!(item.performer in sort_tasks))
                         {
                             sort_tasks[item.performer] = {};
                             _status.forEach(function (status)
                             {
-                                sort_tasks[item.performer][status] = null;
+                                sort_tasks[item.performer][status] = [];
                             });
                         }
                     });
 
                     for (key in sort_tasks)
                     {
-                        this.raw_tasks.forEach(function(item, i)
+                        this.raw_tasks.forEach(function (item, i)
                         {
                             if (item.performer == key)
                             {
-                                item['id']  = i;
-                                sort_tasks[key][item.status] == null ? sort_tasks[key][item.status] = [item] : sort_tasks[key][item.status].push(item);
+                                item['id'] = i;
+                                sort_tasks[key][item.status] == undefined ? sort_tasks[key][item.status] = [item] : sort_tasks[key][item.status].push(item);
                             }
                         });
-                    };
+                    }
                     this.tasks = sort_tasks;
+                }
+                else
+                {
+                    this.tasks = [];
                 }
             }
         },
-        methods:
-        {
-          move: function(evt, originalEvent)
-          {
-            console.log(evt, originalEvent);
-          },
+        methods: {
+            onEnd: function ()
+            {
+                var _this = this;
+                var _raw_tasks = [];
+                for (var performer in this.tasks)
+                {
+                    for (var status in this.tasks[performer])
+                    {
+                        this.tasks[performer][status].forEach(function (item)
+                        {
+                            if (!_this.isEmptyObject(item))
+                            {
+                                item.status !== status ? item.status = status : '';
+                                item.performer !== performer ? item.performer = performer : '';
+                                _this.raw_tasks.push(item);
+                                _raw_tasks.push(item);
+                            }
+                        });
+                    }
+                }
+                this.raw_tasks = _raw_tasks;
+                console.log(this.raw_tasks);
+            },
             get_tasks: function (deploy_id)
             {
-
                 this.activ_version = deploy_id;
                 var _this = this;
 
@@ -492,9 +536,16 @@
                     url: 'give_back_data.php',
                     data: {deploy_id: deploy_id},
                     dataType: 'json',
-                    success: function(response)
+                    success: function (response)
                     {
-                        _this.raw_tasks = response.tasks;
+                        if (response.status)
+                        {
+                            _this.raw_tasks = response.tasks;
+                        }
+                        else
+                        {
+                            _this.raw_tasks = [];
+                        }
                     }
                 });
             },
@@ -506,26 +557,18 @@
             },
             add_task: function ()
             {
-              this.new_task.number = 'ATGSM-' + Math.floor(Math.random() * (8000 - 1000)) + 1000;
-              this.raw_tasks.push(this.new_task);
-              $("#modal_add").modal('hide');
-              this.new_task = {};
+                this.new_task.number = 'ATGSM-' + Math.floor(Math.random() * (8000 - 1000)) + 1000;
+                this.raw_tasks.push(this.new_task);
+                $("#modal_add").modal('hide');
+                this.new_task = {};
             },
             edit_task: function (id)
             {
                 this.layout = 'main';
-
                 this.editable_task = this.raw_tasks[id];
                 this.editable_task['id'] = id;
-
                 $("#modal_edit").modal('show');
             },
-            add: function(){
-      				this.list.push({name:'Juan'});
-      			},
-      			replace: function(){
-      				this.list=[{name:'Edgard'}]
-      			},
             isEmptyObject: function (obj)
             {
                 for (var key in obj)
@@ -534,7 +577,6 @@
                 }
                 return true;
             }
-
         }
     });
 </script>
