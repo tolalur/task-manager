@@ -1,0 +1,86 @@
+.nav_menu {
+    background-color: #f7f7f9;
+    padding-top: 10px;
+    border: 1px solid #e1e1e8;
+}
+
+.status {
+    margin-bottom: 10px;
+}
+
+.status p {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 10px solid #e1e1e8;
+}
+
+.performer_title {
+    margin-bottom: 10px;
+}
+
+.performer_title hr {
+    margin: 0;
+    padding-top: 7px;
+}
+
+.summary_task {
+    display: block !important;
+    float: right;
+    width: 20%;
+}
+
+.summary_task_hide {
+    display: none;
+}
+
+.main_tasks_summary {
+    width: 80% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    overflow-y: auto;
+}
+
+.main_tasks_not_summary {
+    width: 90%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.summary_task .row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.summary_task h4 {
+    padding-left: 15px;
+}
+
+.task_header {
+    padding-top: 10px;
+}
+
+.task_body {
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+.summary_task .rubric {
+    color: #8C8C8C;
+}
+
+.summary_task .btn-default {
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+.panel {
+    min-height: 100px;
+}
+
+#modal_edit label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #8C8C8C;
+}
