@@ -233,7 +233,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Тип задачи</label>
                             <div class="col-xs-6">
-                                <select class="form-control" v-model="new_task.type">
+                                <select class="form-control" v-model="new_task.type" v-bind:class="{'alert-danger': check_new_task.type}">
                                     <option v-for="value in task_type">{{ value }}</option>
                                 </select>
                             </div>
@@ -241,7 +241,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Версия продукта</label>
                             <div class="col-xs-6">
-                                <select class="form-control" v-model="new_task.product_version">
+                                <select class="form-control" v-model="new_task.product_version" v-bind:class="{'alert-danger': check_new_task.product_version}">
                                     <option v-for="value in version">{{ value.title }}</option>
                                 </select>
                             </div>
@@ -256,7 +256,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Приоритет</label>
                             <div class="col-xs-10">
-                                <select class="form-control" v-model="new_task.priority">
+                                <select class="form-control" v-model="new_task.priority" v-bind:class="{'alert-danger': check_new_task.priority}">
                                     <option v-for="value in priority">
                                         {{ value }}
                                     </option>
@@ -272,7 +272,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Исполнитель</label>
                             <div class="col-xs-6">
-                                <select class="form-control" v-model="new_task.performer">
+                                <select class="form-control" v-model="new_task.performer" v-bind:class="{'alert-danger': check_new_task.performer}">
                                     <option v-for="value in performers">{{ value }}</option>
                                 </select>
                             </div>
@@ -280,7 +280,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">Статус</label>
                             <div class="col-xs-6">
-                                <select class="form-control" v-model="new_task.status">
+                                <select class="form-control" v-model="new_task.status" v-bind:class="{'alert-danger': check_new_task.status}">
                                     <option v-for="value in status">{{ value }}</option>
                                 </select>
                             </div>
@@ -289,7 +289,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-default" v-on:click="dismiss_add()">Закрыть</button>
                     <button type="button" class="btn btn-primary" v-on:click="add_task()">Сохранить изменения</button>
                 </div>
 

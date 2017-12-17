@@ -13,6 +13,14 @@ var app = new Vue({
         editable_task: {},
         sammary_task: {},
         new_task: {},
+        check_new_task:
+        {
+            type: false,
+            product_version: false,
+            priority: false,
+            performer: false,
+            status: false
+        },
         temp: {},
         layout: 'layout',
         task_type: ['Задача', 'Ошибка'],
@@ -20,6 +28,7 @@ var app = new Vue({
         performers: ['Бородин Алексей', 'Бутаков Валентин', 'Власов Артем']
 
     },
+    
     watch: {
         raw_tasks: function ()
         {
@@ -111,12 +120,57 @@ var app = new Vue({
             this.sammary_task['id'] = id;
             this.layout = 'summary';
         },
+        check: function ()
+        {
+            if (!this.isEmptyObject(this.new_task))
+            {
+                for (var key in this.check_new_task)
+                {
+                    if (this.new_task[key] == undefined)
+                    {
+                        this.check_new_task[key] = true;
+                    }
+                    else
+                    {
+                        this.check_new_task[key] = false;
+                    }
+                }
+            }
+            else
+            {
+                for (var key in this.check_new_task)
+                {
+                    this.check_new_task[key] = true;
+                }
+            }
+        },
         add_task: function ()
         {
+
+            if (this.new_task.type == undefined ||
+                this.new_task.product_version == undefined ||
+                this.new_task.priority == undefined ||
+                this.new_task.performer == undefined ||
+                this.new_task.status == undefined)
+            {
+                this.check();
+                alert('Заполните обязательные поля');
+                return;
+            }
             this.new_task.number = 'ATGSM-' + Math.floor(Math.random() * (8000 - 1000)) + 1000;
             this.raw_tasks.push(this.new_task);
             $("#modal_add").modal('hide');
             this.new_task = {};
+        },
+        dismiss_add: function ()
+        {
+            $("#modal_add").modal('hide');
+            this.new_task = {};
+
+            for (var key in this.check_new_task)
+            {
+                this.check_new_task[key] = false;
+            }
         },
         edit_task: function (id)
         {
