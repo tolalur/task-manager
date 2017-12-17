@@ -122,25 +122,15 @@ var app = new Vue({
         },
         check: function ()
         {
-            if (!this.isEmptyObject(this.new_task))
+            for (var key in this.check_new_task)
             {
-                for (var key in this.check_new_task)
-                {
-                    if (this.new_task[key] == undefined)
-                    {
-                        this.check_new_task[key] = true;
-                    }
-                    else
-                    {
-                        this.check_new_task[key] = false;
-                    }
-                }
-            }
-            else
-            {
-                for (var key in this.check_new_task)
+                if (this.new_task[key] == undefined)
                 {
                     this.check_new_task[key] = true;
+                }
+                else
+                {
+                    this.check_new_task[key] = false;
                 }
             }
         },
